@@ -1,0 +1,49 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "steps": [
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/helpmark-pink/nijiiro-hiroba-theme",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "オリジナルテーマ「にじいろひろば」を読み込んでいます"
+      }
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "にじいろひろば",
+        "blogdescription": "神戸市東灘区の放課後等デイサービス（架空の施設です）",
+        "permalink_structure": "/%postname%/",
+        "timezone_string": "Asia/Tokyo",
+        "date_format": "Y.m.d"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n/**\n * デモ用のお知らせを3件用意する。\n * テーマの functions.php で登録したカスタム投稿タイプ news と\n * タクソノミー news_cat を、実際に動かして見せるためのもの。\n */\n$items = array(\n\tarray(\n\t\t'title' => '見学・体験のお申し込みを受付中です',\n\t\t'date'  => '2026-08-20 10:00:00',\n\t\t'cat'   => 'お知らせ',\n\t\t'body'  => \"にじいろひろばでは、随時、見学と体験のお申し込みを受け付けています。\\n\\n見学は、実際に子どもたちが活動している時間にお越しいただくのがおすすめです。パンフレットではわからない教室の雰囲気や、スタッフと子どもたちのやりとりを、そのままご覧いただけます。お子さまと一緒に半日を過ごしていただく体験もできます。\\n\\n「受給者証をまだ持っていない」「うちの子に合うか自信がない」という段階でも問題ありません。申請の手順からご説明しますし、市区町村の窓口へ同行することもできます。まずは話を聞いてみたい、というだけのお問い合わせも歓迎です。\\n\\nお電話（078-123-4567）または、サイト内のお問い合わせフォームからご連絡ください。平日の10:00〜18:00に承っています。\",\n\t),\n\tarray(\n\t\t'title' => '夏まつりを開催しました',\n\t\t'date'  => '2026-08-09 10:00:00',\n\t\t'cat'   => 'イベント',\n\t\t'body'  => \"8月8日（土）、教室で夏まつりを開きました。\\n\\n今年はみんなで話し合って、出しものを決めるところから始めました。「わたあめがいい」「おばけやしきをやりたい」と意見が分かれましたが、最後は多数決で「かき氷屋さん」「わなげ」「うちわづくり」の3つに決定。前の週から看板を描いたり、景品を袋に詰めたりと、準備の時間も楽しそうでした。\\n\\n当日は、うちわづくりのブースがいちばんの人気。絵の具で手形を押したり、シールで名前を飾ったりと、一人ひとり違ううちわができあがりました。\\n\\n保護者の方にもたくさんお越しいただき、ありがとうございました。\",\n\t),\n\tarray(\n\t\t'title' => '8月の開所日についてのお知らせ',\n\t\t'date'  => '2026-07-28 10:00:00',\n\t\t'cat'   => '重要なお知らせ',\n\t\t'body'  => \"8月の開所日についてご連絡いたします。\\n\\nお盆期間中の休所日\\n8月13日（木）〜8月16日（日）は休所とさせていただきます。8月17日（月）から通常どおり開所いたします。\\n\\n夏休み中の利用時間\\n学校がお休みの期間は、9:00〜17:00の開所となります。送迎の時間はご家庭ごとに調整いたしますので、ご希望の時間を連絡帳またはお電話でお知らせください。\\n\\nお弁当のご用意をお願いします\\n夏休み中はお昼をはさむため、お弁当と多めの水筒をお持たせください。暑い日が続きますので、保冷剤を入れていただけると安心です。\",\n\t),\n);\n\nforeach ( $items as $item ) {\n\tif ( get_page_by_title( $item['title'], OBJECT, 'news' ) ) {\n\t\tcontinue;\n\t}\n\n\t$post_id = wp_insert_post(\n\t\tarray(\n\t\t\t'post_type'    => 'news',\n\t\t\t'post_title'   => $item['title'],\n\t\t\t'post_content' => $item['body'],\n\t\t\t'post_status'  => 'publish',\n\t\t\t'post_date'    => $item['date'],\n\t\t)\n\t);\n\n\tif ( ! $post_id || is_wp_error( $post_id ) ) {\n\t\tcontinue;\n\t}\n\n\t$term = term_exists( $item['cat'], 'news_cat' );\n\tif ( ! $term ) {\n\t\t$term = wp_insert_term( $item['cat'], 'news_cat' );\n\t}\n\tif ( ! is_wp_error( $term ) ) {\n\t\twp_set_object_terms( $post_id, (int) $term['term_id'], 'news_cat' );\n\t}\n}\n\n// カスタム投稿タイプのURL（/news/ と /news/{スラッグ}/）を有効にする\nflush_rewrite_rules();\n",
+      "progress": {
+        "caption": "デモ用のお知らせを3件登録しています"
+      }
+    },
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
+    }
+  ]
+}

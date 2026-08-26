@@ -12,6 +12,21 @@
 
 ![テーマのスクリーンショット](screenshot.png)
 
+## ブラウザで試す
+
+インストール不要で、このテーマが動いているWordPressをブラウザの中で起動できます。
+管理画面にもログイン済みの状態で入れるので、お知らせを追加して
+サイトに反映されるところまで実際に触っていただけます。
+
+**▶ [WordPress Playground でデモを開く](https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fraw.githubusercontent.com%2Fhelpmark-pink%2Fnijiiro-hiroba-theme%2Fmain%2F_playground%2Fblueprint.json)**
+
+- 起動には30秒ほどかかります
+- お知らせのサンプルが3件、あらかじめ登録されています
+- 管理画面は右上のツールバー、または `/wp-admin/` から
+- すべてブラウザの中だけで動いており、閉じると消えます
+
+デモの設定は [`_playground/blueprint.json`](_playground/blueprint.json) に記述しています。
+
 ## 実装している機能
 
 | 機能 | 内容 |
@@ -40,7 +55,9 @@ nijiiro-hiroba/
 ├── screenshot.png      テーマ一覧に表示されるサムネイル
 ├── js/
 │   └── main.js         ヘッダーの影・ハンバーガーメニュー
-└── images/             サイトで使用する写真
+├── images/             サイトで使用する写真
+└── _playground/
+    └── blueprint.json  WordPress Playground でデモを起動するための設定
 ```
 
 ## 動作環境
